@@ -90,6 +90,8 @@ class DatasetGenerator:
 
         self.vocabulary_size = idx
 
+    def decode(self, tokenized):
+        return [list(self.word2id.keys())[list(self.word2id.values()).index(i)] for i in tokenized]
 
     def generate(self, one_token_per_attr=True):
         dataset = []
@@ -145,3 +147,13 @@ class DatasetGenerator:
         with open(self.dataset_folder + "dataset.txt", "w", encoding="utf-8") as f:
             for line in dataset:
                 f.write(line + "\n")
+    
+    ## split the tokenized data into train and test, also shuffle the data
+    def split(self, train_ratio=0.8):
+        assert self.dataset_tokenized
+
+        np.random.shuffle(self.dataset_tokenized)
+        train_size = int(len(self.dataset_tokenized) * train_ratio)
+        self.train = self.dataset_tokenized[:train_size]
+        self.test = self.dataset_tokenized[train_size:]
+    
