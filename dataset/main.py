@@ -5,7 +5,7 @@ from scipy import io
 import numpy as np
 
 
-class Dataset:
+class DatasetGenerator:
     def __init__(
         self,
         dataset_folder="./data/",
@@ -14,7 +14,6 @@ class Dataset:
         facts_per_person=10,
         distribution="zipf",
         place=False,
-        time=False,
         day=False,
     ):
         self.dataset_folder = dataset_folder
@@ -25,7 +24,6 @@ class Dataset:
         self.distribution = distribution
 
         self.place = place
-        self.time = time
         self.day = day
 
         self.load_data()
@@ -74,12 +72,37 @@ class Dataset:
                 "days.txt"
             )
 
-    def generate(self):
+    def tokenize(self):
+        assert self.dataset_splitted
+
+        idx = 0
+        self.word2id = {}
+        self.dataset_tokenized = []
+
+        for row in self.dataset_splitted:
+            sent_tokenized = []
+            for word in row:
+                if word not in self.word2id:
+                    self.word2id[word] = idx
+                    idx += 1
+                sent_tokenized.append(self.word2id[word])
+            self.dataset_tokenized.append(sent_tokenized)
+
+        self.vocabulary_size = idx
+
+
+    def generate(self, one_token_per_attr=True):
         dataset = []
+        dataset_spliited = []
         # first generate the amount of names required
         names = np.random.choice(
             self.names, self.samples // self.facts_per_person, replace=False
         )
+
+        template_no_place_no_day = "{name} had {food}"
+        template_place_no_day = "{name} had {food} at {place}"
+        template_no_place_day = "{name} had {food} on {day}"
+        template_place_day = "{name} had {food} at {place} on {day}"
 
         for name in names:
             # now generate the foods which that person likes
@@ -88,22 +111,36 @@ class Dataset:
             )
 
             if self.place:
-                place = "at " + np.random.choice(self.restaurants, 1)[0] + " "
+                random_place = np.random.choice(self.restaurants, 1)[0] + " "
             else:
-                place = ""
-
+                random_place = ""
             if self.day:
-                day = np.random.choice(self.days, 1)[0]
+                random_day = np.random.choice(self.days, 1)[0]
             else:
-                day = ""
+                random_day = ""
+
+            if self.place and self.day:
+                template = template_place_day
+            elif self.place:
+                template = template_place_no_day
+            elif self.day:
+                template = template_no_place_day
+            else:
+                template = template_no_place_no_day
 
             for food in foods:
-                fact = f"{name} had "
-                fact = fact + food + place + day
+                fact = template.format(name=name, food=food.strip(), place=random_place.strip(), day=random_day.strip())
 
                 dataset.append(fact)
 
+                if one_token_per_attr:
+                    fact_spliited = [elem for elem in [name, food.strip(), random_place.strip(), random_day.strip()] if len(elem)]
+                    dataset_spliited.append(fact_spliited)
+                else:
+                    dataset_spliited.append(fact.split())
+
         self.dataset = dataset
+        self.dataset_splitted = dataset_spliited
 
         with open(self.dataset_folder + "dataset.txt", "w", encoding="utf-8") as f:
             for line in dataset:
