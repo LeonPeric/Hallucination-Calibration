@@ -3,6 +3,7 @@
 # names of small foods list is from food 101 of huggingface
 from scipy import io
 import numpy as np
+import random
 
 
 class DatasetGenerator:
@@ -11,33 +12,41 @@ class DatasetGenerator:
         dataset_folder="./data/",
         small=True,
         samples=10000,
-        facts_per_person=10,
+        number_person=10,
+        max_foods_per_person=10,
         distribution="zipf",
         place=False,
         day=False,
+        seed=42,
     ):
         self.dataset_folder = dataset_folder
         self.food_list_small = small
 
         self.samples = samples
-        self.facts_per_person = facts_per_person
+        self.number_person = number_person
+        self.max_foods_per_person = max_foods_per_person
         self.distribution = distribution
 
         self.place = place
         self.day = day
 
+        self.rng = random.Random(x=seed)
+        np.random.seed(seed)
+
         self.load_data()
 
-    def calculate_zipf_distribution(self, items):
-        temp = np.array([1 / (i + 1) for i in range(len(items))])
+    def calculate_zipf_distribution(self, items, alpha=1):
+        temp = np.array([1 / ((i + 1) ** alpha) for i in range(len(items))])
         return temp / sum(temp)
 
-    def create_list_with_probabilities(self, name):
+    def create_list_with_probabilities(self, name, shuffle=True, alpha=1):
         with open(self.dataset_folder + name, "r", encoding="utf-8") as f:
             items = f.read().splitlines()
+            if shuffle:
+                self.rng.shuffle(items)
 
         if self.distribution == "zipf":
-            probabilities = self.calculate_zipf_distribution(items)
+            probabilities = self.calculate_zipf_distribution(items, alpha=alpha)
         else:
             probabilities = np.array([1 for i in range(len(items))])
 
@@ -92,25 +101,39 @@ class DatasetGenerator:
 
     def decode(self, tokenized):
         return [list(self.word2id.keys())[list(self.word2id.values()).index(i)] for i in tokenized]
+    
+    def softmax(self, x):
+        return np.exp(x)/np.sum(np.exp(x))
+
+    def generate_probabilities(self):
+        self.sampled_names = self.rng.sample(self.names, self.number_person)
+        # Uniforn probabilities among names
+        self.distribution_of_names = {}
+        for name in self.sampled_names:
+            self.distribution_of_names[name] = 1 / len(self.sampled_names)
+
+        self.distributions_per_name = {}
+        for name in self.sampled_names:
+            food_names, food_dist = self.create_list_with_probabilities('food_list_medium.txt', alpha=2)
+            # normalize food_dist so it sums to 1
+            self.distributions_per_name[name] = {'food': food_names[:self.max_foods_per_person],
+                                                 'prob': food_dist[:self.max_foods_per_person] / np.sum(food_dist[:self.max_foods_per_person])}
 
     def generate(self, one_token_per_attr=True):
         dataset = []
         dataset_spliited = []
-        # first generate the amount of names required
-        names = np.random.choice(
-            self.names, self.samples // self.facts_per_person, replace=False
-        )
 
         template_no_place_no_day = "{name} had {food}"
         template_place_no_day = "{name} had {food} at {place}"
         template_no_place_day = "{name} had {food} on {day}"
         template_place_day = "{name} had {food} at {place} on {day}"
 
-        for name in names:
+        while len(dataset) < self.samples:
             # now generate the foods which that person likes
-            foods = np.random.choice(
-                self.foods, self.facts_per_person, replace=False, p=self.foods_weighted
-            )
+            name = np.random.choice(list(self.distribution_of_names.keys()), p=list(self.distribution_of_names.values()), size=1)[0]
+
+            food = np.random.choice(self.distributions_per_name[name]['food'],\
+                                    p=self.distributions_per_name[name]['prob'], size=1)[0]
 
             if self.place:
                 random_place = np.random.choice(self.restaurants, 1)[0] + " "
@@ -130,16 +153,15 @@ class DatasetGenerator:
             else:
                 template = template_no_place_no_day
 
-            for food in foods:
-                fact = template.format(name=name, food=food.strip(), place=random_place.strip(), day=random_day.strip())
+            fact = template.format(name=name, food=food.strip(), place=random_place.strip(), day=random_day.strip())
 
-                dataset.append(fact)
+            dataset.append(fact)
 
-                if one_token_per_attr:
-                    fact_spliited = [elem for elem in [name, food.strip(), random_place.strip(), random_day.strip()] if len(elem)]
-                    dataset_spliited.append(fact_spliited)
-                else:
-                    dataset_spliited.append(fact.split())
+            if one_token_per_attr:
+                fact_spliited = [elem for elem in [name, food.strip(), random_place.strip(), random_day.strip()] if len(elem)]
+                dataset_spliited.append(fact_spliited)
+            else:
+                dataset_spliited.append(fact.split())
 
         self.dataset = dataset
         self.dataset_splitted = dataset_spliited

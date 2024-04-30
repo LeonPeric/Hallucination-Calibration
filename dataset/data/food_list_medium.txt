@@ -1,0 +1,311 @@
+apple pie
+baby back ribs
+baklava
+beef carpaccio
+beef tartare
+beet salad
+beignets
+bibimbap
+bread pudding
+breakfast burrito
+bruschetta
+caesar salad
+cannoli
+caprese salad
+carrot cake
+ceviche
+cheesecake
+cheese plate
+chicken curry
+chicken quesadilla
+chicken wings
+chocolate cake
+chocolate mousse
+churros
+clam chowder
+club sandwich
+crab cakes
+creme brulee
+croque madame
+cup cakes
+deviled eggs
+donuts
+dumplings
+edamame
+eggs benedict
+escargots
+falafel
+filet mignon
+fish and chips
+foie gras
+french fries
+french onion soup
+french toast
+fried calamari
+fried rice
+frozen yogurt
+garlic bread
+gnocchi
+greek salad
+grilled cheese sandwich
+grilled salmon
+guacamole
+gyoza
+hamburger
+hot and sour soup
+hot dog
+huevos rancheros
+hummus
+ice cream
+lasagna
+lobster bisque
+lobster roll sandwich
+macaroni and cheese
+macarons
+miso soup
+mussels
+nachos
+omelette
+onion rings
+oysters
+pad thai
+paella
+pancakes
+panna cotta
+peking duck
+pho
+pizza
+pork chop
+poutine
+prime rib
+pulled pork sandwich
+ramen
+ravioli
+red velvet cake
+risotto
+samosa
+sashimi
+scallops
+seaweed salad
+shrimp and grits
+spaghetti bolognese
+spaghetti carbonara
+spring rolls
+steak
+strawberry shortcake
+sushi
+tacos
+takoyaki
+tiramisu
+tuna tartare
+waffles
+aloo gobi
+apple strudel
+arancini
+baba ganoush
+bagel
+bakso
+bangers and mash
+beef stroganoff
+beef wellington
+bhaji
+biryani
+black forest cake
+blt sandwich
+borscht
+boston cream pie
+bouillabaisse
+brioche
+broccoli cheddar soup
+buffalo wings
+bundt cake
+burrito
+butter chicken
+butternut squash soup
+calzone
+camembert cheese
+caramel apple
+carpaccio
+cheese fondue
+cheeseburger
+chicken alfredo
+chicken marsala
+chicken parmesan
+chicken piccata
+chicken tikka masala
+chili
+chili con carne
+chimichanga
+chips and salsa
+chocolate chip cookies
+chow mein
+cinnamon roll
+clafoutis
+cobb salad
+coconut cake
+coconut shrimp
+cornbread
+crab rangoon
+cranberry sauce
+crepes
+croissant
+currywurst
+custard
+danish pastry
+date cake
+deep dish pizza
+dolma
+egg roll
+egg salad
+eggs florentine
+enchiladas
+fajitas
+flan
+focaccia
+fondue
+french dip sandwich
+fried chicken
+frittata
+fruit salad
+fudge
+gazpacho
+gelato
+general tso's chicken
+gingerbread
+goulash
+grape leaves
+gumbo
+gyros
+halibut
+hash browns
+hollandaise sauce
+honey cake
+hushpuppies
+jambalaya
+jelly doughnut
+jerk chicken
+key lime pie
+kung pao chicken
+lamington
+lasagna soup
+lemon meringue pie
+lentil soup
+lobster thermidor
+lomo saltado
+macadamia nut cookie
+madeleine
+mango sticky rice
+margarita pizza
+marzipan
+masala dosa
+meatloaf
+minestrone soup
+mojito
+mole sauce
+monkey bread
+moussaka
+muffin
+mulligatawny soup
+naan bread
+neapolitan pizza
+nicoise salad
+oatmeal cookie
+osso buco
+pastrami sandwich
+pavlova
+peach cobbler
+peanut butter cookie
+pecan pie
+penne alla vodka
+pepperoni pizza
+pesto sauce
+pickle
+pie
+pierogi
+pilaf
+pistachio ice cream
+po' boy sandwich
+polenta
+popcorn
+popovers
+pork belly
+pot pie
+pot roast
+potato leek soup
+potato salad
+potato skins
+pound cake
+profiteroles
+pumpkin pie
+quiche
+quiche lorraine
+quinoa salad
+rabbit stew
+rack of lamb
+ratatouille
+reuben sandwich
+rice pudding
+roast beef
+roast chicken
+rocky road ice cream
+rotisserie chicken
+roulade
+salmon mousse
+sauerbraten
+sausage roll
+scotch egg
+seafood paella
+sesame chicken
+shepherd's pie
+shish kebab
+short ribs
+sloppy joes
+smoked salmon
+snickerdoodle
+snow cone
+souffle
+soup dumplings
+sour cream
+spanakopita
+spare ribs
+spicy tuna roll
+spinach dip
+sponge cake
+spumoni
+squid ink pasta
+stuffed peppers
+stuffed shells
+sweet potato fries
+sweet potato pie
+swiss roll
+swordfish
+tabbouleh
+tahini
+tamale
+tandoori chicken
+tarte tatin
+tea sandwich
+tempura
+teriyaki chicken
+tex-mex
+thai curry
+thai iced tea
+three bean salad
+toad in the hole
+toffee
+tortellini
+tortilla soup
+trifle
+trout
+turducken
+turkey sandwich
+turnover
+tzatziki
+upside down cake
+veal parmigiana
+vegetable stir fry
+venison
+vichyssoise
+viennese coffee
+waldorf salad
+walnut cake
