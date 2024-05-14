@@ -87,8 +87,9 @@ class DatasetGenerator:
     def tokenize(self):
         assert self.dataset_splitted
 
-        idx = 0
+        idx = 1
         self.word2id = {}
+        self.word2id["<s>"] = 0
         self.dataset_tokenized = []
 
         for row in self.dataset_splitted:
@@ -134,10 +135,10 @@ class DatasetGenerator:
         dataset = []
         dataset_spliited = []
 
-        template_no_place_no_day = "{name} {food}"
-        template_place_no_day = "{name} {food} {place}"
-        template_no_place_day = "{name} {food} {day}"
-        template_place_day = "{name} {food} {place} {day}"
+        template_no_place_no_day = "<s> {name} {food}"
+        template_place_no_day = "<s> {name} {food} {place}"
+        template_no_place_day = "<s> {name} {food} {day}"
+        template_place_day = "<s> {name} {food} {place} {day}"
 
         while len(dataset) < self.samples:
             if self.food_global:
@@ -194,6 +195,7 @@ class DatasetGenerator:
                 fact_spliited = [
                     elem
                     for elem in [
+                        "<s>",
                         name,
                         food.strip(),
                         random_place.strip(),
