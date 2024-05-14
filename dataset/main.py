@@ -101,7 +101,7 @@ class DatasetGenerator:
                 sent_tokenized.append(self.word2id[word])
             self.dataset_tokenized.append(sent_tokenized)
 
-        self.vocabulary_size = idx
+        self.vocabulary_size = idx + 1
 
     def decode(self, tokenized):
         return [
