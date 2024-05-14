@@ -18,6 +18,7 @@ class DatasetGenerator:
         place=False,
         day=False,
         seed=42,
+        food_global=False,
     ):
         self.dataset_folder = dataset_folder
         self.food_list_small = small
@@ -29,6 +30,8 @@ class DatasetGenerator:
 
         self.place = place
         self.day = day
+
+        self.food_global = food_global
 
         self.rng = random.Random(x=seed)
         np.random.seed(seed)
@@ -100,10 +103,13 @@ class DatasetGenerator:
         self.vocabulary_size = idx
 
     def decode(self, tokenized):
-        return [list(self.word2id.keys())[list(self.word2id.values()).index(i)] for i in tokenized]
-    
+        return [
+            list(self.word2id.keys())[list(self.word2id.values()).index(i)]
+            for i in tokenized
+        ]
+
     def softmax(self, x):
-        return np.exp(x)/np.sum(np.exp(x))
+        return np.exp(x) / np.sum(np.exp(x))
 
     def generate_probabilities(self):
         self.sampled_names = self.rng.sample(self.names, self.number_person)
@@ -114,26 +120,48 @@ class DatasetGenerator:
 
         self.distributions_per_name = {}
         for name in self.sampled_names:
-            food_names, food_dist = self.create_list_with_probabilities('food_list_medium.txt', alpha=2)
+            food_names, food_dist = self.create_list_with_probabilities(
+                "food_list_medium.txt", alpha=2
+            )
             # normalize food_dist so it sums to 1
-            self.distributions_per_name[name] = {'food': food_names[:self.max_foods_per_person],
-                                                 'prob': food_dist[:self.max_foods_per_person] / np.sum(food_dist[:self.max_foods_per_person])}
+            self.distributions_per_name[name] = {
+                "food": food_names[: self.max_foods_per_person],
+                "prob": food_dist[: self.max_foods_per_person]
+                / np.sum(food_dist[: self.max_foods_per_person]),
+            }
 
     def generate(self, one_token_per_attr=True):
         dataset = []
         dataset_spliited = []
 
-        template_no_place_no_day = "{name} had {food}"
-        template_place_no_day = "{name} had {food} at {place}"
-        template_no_place_day = "{name} had {food} on {day}"
-        template_place_day = "{name} had {food} at {place} on {day}"
+        template_no_place_no_day = "{name} {food}"
+        template_place_no_day = "{name} {food} {place}"
+        template_no_place_day = "{name} {food} {day}"
+        template_place_day = "{name} {food} {place} {day}"
 
         while len(dataset) < self.samples:
-            # now generate the foods which that person likes
-            name = np.random.choice(list(self.distribution_of_names.keys()), p=list(self.distribution_of_names.values()), size=1)[0]
+            if self.food_global:
+                name = np.random.choice(
+                    list(self.distribution_of_names.keys()),
+                    p=list(self.distribution_of_names.values()),
+                    size=1,
+                )[0]
 
-            food = np.random.choice(self.distributions_per_name[name]['food'],\
-                                    p=self.distributions_per_name[name]['prob'], size=1)[0]
+                food = np.random.choice(self.foods, p=self.foods_weighted, size=1)[0]
+
+            else:
+                # now generate the foods which that person likes
+                name = np.random.choice(
+                    list(self.distribution_of_names.keys()),
+                    p=list(self.distribution_of_names.values()),
+                    size=1,
+                )[0]
+
+                food = np.random.choice(
+                    self.distributions_per_name[name]["food"],
+                    p=self.distributions_per_name[name]["prob"],
+                    size=1,
+                )[0]
 
             if self.place:
                 random_place = np.random.choice(self.restaurants, 1)[0] + " "
@@ -153,12 +181,26 @@ class DatasetGenerator:
             else:
                 template = template_no_place_no_day
 
-            fact = template.format(name=name, food=food.strip(), place=random_place.strip(), day=random_day.strip())
+            fact = template.format(
+                name=name,
+                food=food.strip(),
+                place=random_place.strip(),
+                day=random_day.strip(),
+            )
 
             dataset.append(fact)
 
             if one_token_per_attr:
-                fact_spliited = [elem for elem in [name, food.strip(), random_place.strip(), random_day.strip()] if len(elem)]
+                fact_spliited = [
+                    elem
+                    for elem in [
+                        name,
+                        food.strip(),
+                        random_place.strip(),
+                        random_day.strip(),
+                    ]
+                    if len(elem)
+                ]
                 dataset_spliited.append(fact_spliited)
             else:
                 dataset_spliited.append(fact.split())
@@ -169,7 +211,7 @@ class DatasetGenerator:
         with open(self.dataset_folder + "dataset.txt", "w", encoding="utf-8") as f:
             for line in dataset:
                 f.write(line + "\n")
-    
+
     ## split the tokenized data into train and test, also shuffle the data
     def split(self, train_ratio=0.8):
         assert self.dataset_tokenized
@@ -178,4 +220,3 @@ class DatasetGenerator:
         train_size = int(len(self.dataset_tokenized) * train_ratio)
         self.train = self.dataset_tokenized[:train_size]
         self.test = self.dataset_tokenized[train_size:]
-    
