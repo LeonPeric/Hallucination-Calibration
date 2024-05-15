@@ -222,3 +222,8 @@ class DatasetGenerator:
         train_size = int(len(self.dataset_tokenized) * train_ratio)
         self.train = self.dataset_tokenized[:train_size]
         self.test = self.dataset_tokenized[train_size:]
+    
+    ## get the monofact rate of the dataset
+    ## monofact is when an entry is present only once in the dataset
+    def monofact_rate(self):
+        return len([x for x in self.dataset_splitted if self.dataset_splitted.count(x) == 1]) / len(self.dataset_splitted)
