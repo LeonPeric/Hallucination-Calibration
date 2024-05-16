@@ -16,13 +16,14 @@ class FactDatasetGenerator:
         distribution="zipf",
         seed=42,
         food_list_name="food_list_small.txt",
-        true_dist_size=1000
+        true_dist_size=1000,
+        experiment_path="./experiment/data/",
     ):
         self.dataset_folder = dataset_folder
+        self.experiment_path = experiment_path
 
         self.food_list_name = food_list_name
         self.true_dist_size = true_dist_size
-
 
         self.number_person = number_person
 
@@ -30,7 +31,6 @@ class FactDatasetGenerator:
 
         self.rng = random.Random(x=seed)
         np.random.seed(seed)
-
 
     def generate_all_possibilities(self):
         possible_facts = []
@@ -49,7 +49,9 @@ class FactDatasetGenerator:
         self.names = self.rng.sample(self.all_names, self.number_person)
 
         # Read food names
-        with open(self.dataset_folder + self.food_list_name, "r", encoding="utf-8") as f:
+        with open(
+            self.dataset_folder + self.food_list_name, "r", encoding="utf-8"
+        ) as f:
             self.foods = f.read().splitlines()
 
         # Create all possible facts   -- Y set in our drawing
@@ -61,11 +63,14 @@ class FactDatasetGenerator:
 
         self.all_possibilities = possible_facts
 
+        self.save_file("all_facts.txt", self.all_possibilities)
+
         return possible_facts
 
     def calculate_zipf_distribution(self, items, alpha=1):
         temp = np.array([1 / ((i + 1) ** alpha) for i in range(len(items))])
         return temp / sum(temp)
+
     def sample_zipf_distribution(self, alpha, possibilities, size=1):
         # Sample from the Zipf distribution
         probabilities = self.calculate_zipf_distribution(possibilities, alpha)
@@ -76,10 +81,13 @@ class FactDatasetGenerator:
     def generate_true_dist(self):
 
         # Generates true distribution by sampling from all possible facts Y (blue + green in the drawing)
-        self.true_dist = self.sample_zipf_distribution( alpha=1, possibilities=self.all_possibilities,size=self.true_dist_size)
+        self.true_dist = self.sample_zipf_distribution(
+            alpha=1, possibilities=self.all_possibilities, size=self.true_dist_size
+        )
         self.tokenize_true_dist()
 
         return self.true_dist
+
     def tokenize(self, words):
 
         # Tokenize the given words
@@ -100,12 +108,12 @@ class FactDatasetGenerator:
             for i in tokenized
         ]
 
-
     def sample_training_data(self, n, data):
         # Samples the training data uniformly from the true distribution (greens in the drawing)
-        self.training_data = self.sample_data(n,data)
+        self.training_data = self.sample_data(n, data)
         self.tokenized_training_data = self.tokenize_data(self.training_data)
 
+        self.save_file("training_data.txt", self.training_data)
 
         return self.training_data
 
@@ -121,7 +129,7 @@ class FactDatasetGenerator:
         self.tokenized_true_dist = self.tokenize_data(self.true_dist)
         self.vocab_size = len(self.word2id)
 
-    def tokenize_data(self,data):
+    def tokenize_data(self, data):
         # tokenize given data, also adds start token
         tokenized_data = []
         for line in data:
@@ -132,3 +140,23 @@ class FactDatasetGenerator:
 
             tokenized_data.append(sent_tokenized)
         return tokenized_data
+
+    def save_file(self, file_name, data):
+        with open(self.experiment_path + file_name, "w") as f:
+            for line in data:
+                f.write(line + "\n")
+
+    def load_file(self, file_name):
+        with open(self.experiment_path + file_name, "r") as f:
+            return f.read().splitlines()
+
+    def load_dataset(self):
+        # first load all the possible facts
+        self.all_possibilities = self.load_file("all_facts.txt")
+
+        # generate the true distribution
+        self.generate_true_dist()
+
+        # load the training data
+        self.training_data = self.load_file("training_data.txt")
+        self.tokenized_training_data = self.tokenize_data(self.training_data)
