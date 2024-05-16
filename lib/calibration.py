@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def get_adaptive_binning(g_series, num_bins=None):
-    max_bins = int(np.floor(1 / g.iloc[0]))
+    max_bins = int(np.floor(1 / g_series.iloc[0]))
 
     if num_bins is None:
         # num all elements divided by the top one
@@ -20,7 +20,7 @@ def get_adaptive_binning(g_series, num_bins=None):
     cur_bin_probas = []
     cur_bin_prob_total = 0.
 
-    for item, generated_prob in zip(list(g.index), g.to_list()):
+    for item, generated_prob in zip(list(g_series.index), g_series.to_list()):
         if (cur_bin_prob_total + generated_prob) > prob_per_bin:
             bins.append((deepcopy(cur_bin_items), deepcopy(cur_bin_probas), cur_bin_prob_total))
             cur_bin_prob_total = 0.
@@ -39,7 +39,6 @@ def get_adaptive_binning(g_series, num_bins=None):
 
 # miscalibration(df['generated_distribution'], df['true_distribution'], num_bins=3)
 def miscalibration(g_series, p_series, num_bins=None):
-    g_series = g_series.sort_values()
     bins = get_adaptive_binning(g_series, num_bins=num_bins)
     miscalibration = 0.
     p_dict = p_series.to_dict()

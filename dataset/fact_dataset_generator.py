@@ -132,4 +132,3 @@ class FactDatasetGenerator:
 
             tokenized_data.append(sent_tokenized)
         return tokenized_data
-
