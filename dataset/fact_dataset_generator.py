@@ -16,7 +16,7 @@ class FactDatasetGenerator:
         distribution="zipf",
         seed=42,
         food_list_name="food_list_small.txt",
-        true_dist_size=1000,
+        true_dist_size=100,
         experiment_path="./experiment/data/",
     ):
         self.dataset_folder = dataset_folder
@@ -65,6 +65,8 @@ class FactDatasetGenerator:
 
         self.save_file("all_facts.txt", self.all_possibilities)
 
+        self.tokenize_all_possibilities()
+
         return possible_facts
 
     def calculate_zipf_distribution(self, items, alpha=1):
@@ -84,7 +86,7 @@ class FactDatasetGenerator:
         self.true_dist = self.sample_zipf_distribution(
             alpha=1, possibilities=self.all_possibilities, size=self.true_dist_size
         )
-        self.tokenize_true_dist()
+        self.tokenized_true_dist = self.tokenize_data(self.true_dist)
 
         return self.true_dist
 
@@ -123,10 +125,10 @@ class FactDatasetGenerator:
 
         return sampled_data
 
-    def tokenize_true_dist(self):
-        # tokenize the true dist at the beginning to create vocabulary. Training set might not include all tokens
+    def tokenize_all_possibilities(self):
+        # tokenize the all possibilities in the beginning to create vocabulary.
         self.word2id = {}
-        self.tokenized_true_dist = self.tokenize_data(self.true_dist)
+        self.all_possibilities_tokenized = self.tokenize_data(self.all_possibilities)
         self.vocab_size = len(self.word2id)
 
     def tokenize_data(self, data):
