@@ -80,11 +80,11 @@ class FactDatasetGenerator:
         samples = np.random.choice(possibilities, size=size, p=probabilities)
         return samples
 
-    def generate_true_dist(self):
+    def generate_true_dist(self, alpha=1):
 
         # Generates true distribution by sampling from all possible facts Y (blue + green in the drawing)
         self.true_dist = self.sample_zipf_distribution(
-            alpha=1, possibilities=self.all_possibilities, size=self.true_dist_size
+            alpha=alpha, possibilities=self.all_possibilities, size=self.true_dist_size
         )
         self.tokenized_true_dist = self.tokenize_data(self.true_dist)
 
