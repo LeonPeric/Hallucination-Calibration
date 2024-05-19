@@ -1,20 +1,3 @@
-# Final Report
-
-[https://github.com/zilaeric/asyrp-extension/blob/main/blogpost.md](https://github.com/zilaeric/asyrp-extension/blob/main/blogpost.md)
-
-The blogpost should be a markdown file of roughly 20 mins of reading (you can calculate that using this app: https://niram.org/read/). In a similar fashion to a paper, though feel free to be creative as long as the main take-home messages are clear and it contains the following components:
-
-- *Introduction: An analysis of the paper and its key components. Think about it as a nicely formatted review as you would see on OpenReview.net. It should contain one paragraph of related work as well.*
-- *Exposition of its weaknesses/strengths/potential which triggered your group to come up with a response.*
-- *Describe your novel contribution.*
-- *Results of your work (link that part with the code in the jupyter notebook)*
-- *Conclude*
-- *Close the notebook with a description of each student's contribution.*
-
-If you need to include an appendix you can in either a pdf format or additional Appendix chapter in your blog. That extra material should be only related to supplementary experiments or clarification and not core information about the project.
-
-**Main point of our work: Yes calibrated models must hallucinate in very specific scenarios described in the original paper: look, we tested it. However, don’t be scared, as in reality many true datasets allow models to be both calibrated and not hallucinate in important areas. It is because they differ from the requirements in original paper (e.g. no monofacts).**
-
 # **Challenging “Calibrated Models Must Hallucinate”: New Insights on Calibration and Hallucination tradeoff.**
 
 ---
@@ -107,7 +90,7 @@ However, let’s assume that in reality, Jakub had almost one thousand different
 
 It’s still easy to have a model that does not hallucinate: it can always output popular facts like “Jakub had pasta”. This post-pretraining process of aligning the model mitigates the hallucination rate but reduces the calibration. 
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled.png)
+![Untitled](assets/fig1.png)
 
 *Fig 1. Example of outputs of hypothetical models (calibrated and not calibrated) after being asked: “Patient has cough and fever. What illness might it be?”*
 
@@ -166,7 +149,7 @@ To test the theoretical claims presented by Kalai and Vempala, we created a synt
 
 In figure 2 frequencies of top10 facts can be seen for true distribution and training set. Note: This is just an example and this distribution might vary a lot between experiments.
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled%201.png)
+![Untitled](assets/fig2.png)
 
 *Fig. 2: Most common facts in our 2W dataset with true probability, and probability in training data.*
 
@@ -223,7 +206,7 @@ These parameters balance model complexity and computational efficiency, allowing
 
 TODO: some plots that show hallucination rate vs miscalibration rate vs monofact rate vs training samples. Is the relationship behaving as expected?
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled%202.png)
+![Untitled](assets/fig3.png)
 
 *Fig. 3: Ratios of most common facts in generated outputs, train set and true distribution.*
 
