@@ -5,3 +5,4 @@ minGPT~=0.0.1
 requests~=2.31.0
 setuptools~=68.2.0
 scipy~=1.13.0
+jupyter

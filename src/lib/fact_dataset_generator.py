@@ -11,7 +11,7 @@ import random
 class FactDatasetGenerator:
     def __init__(
         self,
-        dataset_folder="./fact_data/",
+        dataset_folder="./src/data/",
         number_person=10,
         distribution="zipf",
         seed=42,
