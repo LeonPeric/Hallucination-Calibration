@@ -1,0 +1,2 @@
+{"number of person": 100, "food_list": "food_list_small.txt", "true_dist_size": 1000, "training_set_size": 800, "zipf_alpha": 1.5, "monofact_rate": 0.07875, "miscalibration_rate": 0.30513043478260876, "facts_to_possible_hallucinations_ratio": 0.04969573085542293, "estimated_hallucinations_rate": -0.5235635390533233, "naive_hallucinations_rate": 0.007, "true_hallucinations_rate": 0.007}
+
