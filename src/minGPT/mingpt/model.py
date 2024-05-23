@@ -257,19 +257,29 @@ class GPT(nn.Module):
         optimizer = torch.optim.AdamW(optim_groups, lr=train_config.learning_rate, betas=train_config.betas)
         return optimizer
 
-    def forward(self, idx, targets=None):
+    def forward(self, idx, targets=None, output_hidden_states=False):
         device = idx.device
         b, t = idx.size()
         assert t <= self.block_size, f"Cannot forward sequence of length {t}, block size is only {self.block_size}"
         pos = torch.arange(0, t, dtype=torch.long, device=device).unsqueeze(0) # shape (1, t)
 
+
+        hidden_states = []
+
         # forward the GPT model itself
         tok_emb = self.transformer.wte(idx) # token embeddings of shape (b, t, n_embd)
         pos_emb = self.transformer.wpe(pos) # position embeddings of shape (1, t, n_embd)
+
+        hidden_states.append(tok_emb + pos_emb)
+
         x = self.transformer.drop(tok_emb + pos_emb)
+        hidden_states.append(x)
+
         for block in self.transformer.h:
             x = block(x)
+            hidden_states.append(x)
         x = self.transformer.ln_f(x)
+        hidden_states.append(x)
         logits = self.lm_head(x)
 
         # if we are given some desired targets also calculate the loss
@@ -277,8 +287,10 @@ class GPT(nn.Module):
         if targets is not None:
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1), ignore_index=-1)
 
-        return logits, loss
-
+        if output_hidden_states:
+            return logits, loss, hidden_states
+        else:
+            return logits, loss
     @torch.no_grad()
     def generate(self, idx, max_new_tokens, temperature=1.0, do_sample=False, top_k=None):
         """
