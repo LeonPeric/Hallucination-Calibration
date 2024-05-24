@@ -156,6 +156,8 @@ class FactDatasetGenerator:
         # first load all the possible facts
         self.all_possibilities = self.load_file("all_facts.txt")
 
+        self.tokenize_all_possibilities()
+
         # generate the true distribution
         self.generate_true_dist()
 
