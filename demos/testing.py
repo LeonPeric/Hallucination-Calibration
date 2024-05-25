@@ -7,6 +7,7 @@ from collections import defaultdict
 from torch.utils.data import Dataset
 import matplotlib.pyplot as plt
 from tqdm import tqdm
+import argparse
 
 # Add the path to the src/lib directory to the system path
 lib_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../src/lib'))
@@ -62,7 +63,7 @@ def prepare_model(dataset):
 def prepare_trainer(model, train_data):
     train_config = Trainer.get_default_config()
     train_config.learning_rate = 5e-5
-    train_config.max_iters = 100
+    train_config.max_iters = 2000
     train_config.num_workers = 0
     trainer = Trainer(train_config, model, train_data)
     return trainer
@@ -74,10 +75,10 @@ def train_model(trainer):
     trainer.set_callback('on_batch_end', batch_end_callback)
     trainer.run()
 
-def generate_sequences(names, model, dataset, n_sequences=1000):
+def generate_sequences(model, dataset, n_sequences=1000):
     model.eval()
     collected_generations = []
-    for name in names:
+    for name in ['Melessa']:
         name_tokenized = dataset.word2id[name]
         for _ in tqdm(range(n_sequences)):
             x = torch.Tensor([0, name_tokenized]).unsqueeze(0).long().to("cuda")
@@ -86,13 +87,13 @@ def generate_sequences(names, model, dataset, n_sequences=1000):
             collected_generations.append({'name': name, 'food': food_item})
     return collected_generations
 
-def analyze_generations(name, generations_df, dataset):
-    melessa_df = generations_df[generations_df['name'] == name]
+def analyze_generations(generations_df, dataset):
+    melessa_df = generations_df[generations_df['name'] == 'Melessa']
     food_counts = melessa_df['food'].value_counts()
     food_counts = dict(food_counts / food_counts.sum())
     
-    true_food_names = [d.strip() for d in dataset.distributions_per_name[name]['food']]
-    true_food_probabilities = dataset.distributions_per_name[name]['prob']
+    true_food_names = [d.strip() for d in dataset.distributions_per_name['Melessa']['food']]
+    true_food_probabilities = dataset.distributions_per_name['Melessa']['prob']
     true_probabilities = dict(zip(true_food_names, true_food_probabilities))
 
     generated_probabilities = pd.DataFrame(dataset.dataset_splitted)[1].value_counts()
@@ -135,11 +136,14 @@ def main():
     model = prepare_model(dataset)
     trainer = prepare_trainer(model, train_data)
     train_model(trainer)
+
+    names = ["Melessa"]
+    name = names[0]
     
-    collected_generations = generate_sequences(names, model, dataset)
+    collected_generations = generate_sequences(model, dataset)
     generations_df = pd.DataFrame(collected_generations)
     
-    comparison_df = analyze_generations(name, generations_df, dataset)
+    comparison_df = analyze_generations(generations_df, dataset)
     plot_distribution_comparison(comparison_df)
     
     hallucination_rate = len(generations_df[~generations_df['food'].isin(dataset.distributions_per_name['Melessa']['food'])]) / len(generations_df)
