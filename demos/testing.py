@@ -74,10 +74,10 @@ def train_model(trainer):
     trainer.set_callback('on_batch_end', batch_end_callback)
     trainer.run()
 
-def generate_sequences(model, dataset, n_sequences=1000):
+def generate_sequences(names, model, dataset, n_sequences=1000):
     model.eval()
     collected_generations = []
-    for name in ['Melessa']:
+    for name in names:
         name_tokenized = dataset.word2id[name]
         for _ in tqdm(range(n_sequences)):
             x = torch.Tensor([0, name_tokenized]).unsqueeze(0).long().to("cuda")
@@ -86,13 +86,13 @@ def generate_sequences(model, dataset, n_sequences=1000):
             collected_generations.append({'name': name, 'food': food_item})
     return collected_generations
 
-def analyze_generations(generations_df, dataset):
-    melessa_df = generations_df[generations_df['name'] == 'Melessa']
+def analyze_generations(name, generations_df, dataset):
+    melessa_df = generations_df[generations_df['name'] == name]
     food_counts = melessa_df['food'].value_counts()
     food_counts = dict(food_counts / food_counts.sum())
     
-    true_food_names = [d.strip() for d in dataset.distributions_per_name['Melessa']['food']]
-    true_food_probabilities = dataset.distributions_per_name['Melessa']['prob']
+    true_food_names = [d.strip() for d in dataset.distributions_per_name[name]['food']]
+    true_food_probabilities = dataset.distributions_per_name[name]['prob']
     true_probabilities = dict(zip(true_food_names, true_food_probabilities))
 
     generated_probabilities = pd.DataFrame(dataset.dataset_splitted)[1].value_counts()
@@ -136,10 +136,10 @@ def main():
     trainer = prepare_trainer(model, train_data)
     train_model(trainer)
     
-    collected_generations = generate_sequences(model, dataset)
+    collected_generations = generate_sequences(names, model, dataset)
     generations_df = pd.DataFrame(collected_generations)
     
-    comparison_df = analyze_generations(generations_df, dataset)
+    comparison_df = analyze_generations(name, generations_df, dataset)
     plot_distribution_comparison(comparison_df)
     
     hallucination_rate = len(generations_df[~generations_df['food'].isin(dataset.distributions_per_name['Melessa']['food'])]) / len(generations_df)
