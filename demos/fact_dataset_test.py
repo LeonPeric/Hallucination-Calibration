@@ -42,6 +42,7 @@ def create_model(device, dataset):
     model_config.n_head = 8
     model_config.n_embd = 512
     model_config.vocab_size = dataset.vocab_size
+    model_config.model_type = None
     model_config.block_size = 3
     model = GPT(model_config).to(device)
     return model
@@ -51,13 +52,17 @@ def create_trainer(train_config, model, train_data):
     return trainer
 
 def train_model(model, train_data, trainer, epochs=1):
+  with open("training_logs.txt", "w") as log_file:
     for epoch in range(epochs):
         print(f"Epoch {epoch + 1}/{epochs}")
         trainer.run()
+        current_loss = trainer.loss.item()
         print(f"Training completed for epoch {epoch + 1}")
-        torch.save(model.state_dict(), dataset.experiment_path[:-5] + f"model_epoch_{epoch + 1}.pt")
+        log_message = f"Epoch {epoch + 1}, Loss: {current_loss:.5f}\n"
+        log_file.write(log_message)
 
-# Set seed for reproducibility
+    torch.save(model.state_dict(), dataset.experiment_path[:-5] + f"model_epoch_{epoch + 1}.pt")
+
 
 # Load dataset
 true_dist_size = 1000
@@ -86,9 +91,7 @@ train_config.num_workers = 0
 trainer = create_trainer(train_config, model, train_data)
 
 # Train the model
-train_model(model, train_data, trainer, epochs=5)  # Change the number of epochs as needed
+train_model(model, train_data, trainer, epochs=2)  # set the number of epochs
 
 # Model evaluation
 model.eval()
-
-# Further analysis and visualization can be performed here
