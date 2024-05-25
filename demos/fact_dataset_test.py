@@ -51,60 +51,49 @@ def create_trainer(train_config, model, train_data):
     trainer = Trainer(train_config, model, train_data)
     return trainer
 
-def train_model(seed, model, train_data, trainer, epochs=1):
+def train_model(model, train_data, trainer, epochs=1):
   with open("training_logs.txt", "w") as log_file:
-    log_message = f"Seed, Epoch, Loss\n"
+    log_message = f"Epoch, Loss\n"
     log_file.write(log_message)
     for epoch in range(epochs):
         print(f"Epoch {epoch + 1}/{epochs}")
         trainer.run()
         current_loss = trainer.loss.item()
         print(f"Training completed for epoch {epoch + 1}")
-        log_message = f"{seed}, {epoch + 1}, {current_loss:.5f}\n"
+        log_message = f"{epoch + 1}, {current_loss:.5f}\n"
         log_file.write(log_message)
 
     torch.save(model.state_dict(), dataset.experiment_path[:-5] + f"model_epoch_{epoch + 1}.pt")
 
 
-def run_training_for_seed(seed):
-    # Set the seed for reproducibility
-    set_seed(seed)
+# Load dataset
+true_dist_size = 1000
+training_dataset_size = int(0.8 * true_dist_size)
+alpha = 1
+dataset = FactDatasetGenerator(number_person=100, distribution="zipf", dataset_folder='../src/data/',
+                               food_list_name="food_list_small.txt", true_dist_size=true_dist_size,
+                               experiment_path="src/experiment/small_dataset/data/")
+true_dist, training_data = load_or_generate_dataset(dataset)
 
-    # Load dataset
-    true_dist_size = 1000
-    training_dataset_size = int(0.8 * true_dist_size)
-    alpha = 1
-    dataset = FactDatasetGenerator(number_person=100, distribution="zipf", dataset_folder='../src/data/',
-                                   food_list_name="food_list_small.txt", true_dist_size=true_dist_size,
-                                   experiment_path="src/experiment/small_dataset/data/")
-    true_dist, training_data = load_or_generate_dataset(dataset)
+# Create datasets
+train_dataset = [torch.tensor(x, dtype=torch.long) for x in dataset.tokenized_training_data]
+train_data = create_dataset(train_dataset)
 
-    # Create datasets
-    train_dataset = [torch.tensor(x, dtype=torch.long) for x in dataset.tokenized_training_data]
-    train_data = create_dataset(train_dataset)
+# Model configuration
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model = create_model(device, dataset)
 
-    # Model configuration
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = create_model(device, dataset)
+# Trainer configuration
+train_config = Trainer.get_default_config()
+train_config.learning_rate = 5e-5
+train_config.max_iters = 2000
+train_config.num_workers = 0
 
-    # Trainer configuration
-    train_config = Trainer.get_default_config()
-    train_config.learning_rate = 5e-5
-    train_config.max_iters = 2000
-    train_config.num_workers = 0
+# Create trainer object
+trainer = create_trainer(train_config, model, train_data)
 
-    # Create trainer object
-    trainer = create_trainer(train_config, model, train_data)
+# Train the model
+train_model(model, train_data, trainer, epochs=2)  # set the number of epochs
 
-    # Train the model
-    train_model(seed, model, train_data, trainer, epochs=2)  # set the number of epochs
-    model.eval()
-
-
-# Define a list of seed values to iterate over
-seed_list = [42, 123, 456, 789]
-
-# Run training for each seed value
-for seed in seed_list:
-    print(f"Training for seed: {seed}")
-    run_training_for_seed(seed)
+# Model evaluation
+model.eval()
