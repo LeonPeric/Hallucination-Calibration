@@ -1,0 +1,11 @@
+morning
+Mid-morning
+afternoon
+lunch
+Midday
+Afternoon snack
+evening
+dinner
+Supper
+Late-night snack
+Midnight snack
