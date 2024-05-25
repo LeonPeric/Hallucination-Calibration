@@ -130,27 +130,31 @@ def calculate_monofact_rate(dataset):
     monofact_rate = monofact_number / len(dataset.dataset_splitted)
     return monofact_rate
 
-def main():
+def main(epochs=1):
     dataset, train_dataset = prepare_dataset()
     train_data = MyDataset(train_dataset)
     model = prepare_model(dataset)
     trainer = prepare_trainer(model, train_data)
-    train_model(trainer)
 
-    names = ["Melessa"]
-    name = names[0]
-    
-    collected_generations = generate_sequences(model, dataset)
-    generations_df = pd.DataFrame(collected_generations)
-    
-    comparison_df = analyze_generations(generations_df, dataset)
-    plot_distribution_comparison(comparison_df)
-    
-    hallucination_rate = len(generations_df[~generations_df['food'].isin(dataset.distributions_per_name['Melessa']['food'])]) / len(generations_df)
-    print(f"Hallucination rate: {hallucination_rate}")
-    
-    monofact_rate = calculate_monofact_rate(dataset)
-    print(f"Monofact rate: {monofact_rate}")
+    for epoch in range(epochs):
+        print(f"Epoch {epoch + 1}/{epochs}")
+        train_model(trainer)
+
+        collected_generations = generate_sequences(model, dataset)
+        generations_df = pd.DataFrame(collected_generations)
+
+        comparison_df = analyze_generations(generations_df, dataset)
+        plot_distribution_comparison(comparison_df)
+
+        hallucination_rate = len(generations_df[~generations_df['food'].isin(dataset.distributions_per_name['Melessa']['food'])]) / len(generations_df)
+        print(f"Hallucination rate: {hallucination_rate}")
+
+        monofact_rate = calculate_monofact_rate(dataset)
+        print(f"Monofact rate: {monofact_rate}")
+
+if __name__ == "__main__":
+    main(epochs=5)  # Specify the number of epochs you want to train for
+
 
 if __name__ == "__main__":
     main()
