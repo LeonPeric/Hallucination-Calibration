@@ -1,7 +1,10 @@
+import os
+import sys
 import torch
 import numpy as np
 import pandas as pd
 from torch.utils.data import Dataset
+
 from src.lib.fact_dataset_generator import FactDatasetGenerator
 from src.minGPT.mingpt.model import GPT
 from src.minGPT.mingpt.utils import set_seed
@@ -55,7 +58,6 @@ def train_model(model, train_data, trainer, epochs=1):
         torch.save(model.state_dict(), dataset.experiment_path[:-5] + f"model_epoch_{epoch + 1}.pt")
 
 # Set seed for reproducibility
-set_seed(42)
 
 # Load dataset
 true_dist_size = 1000
@@ -63,7 +65,7 @@ training_dataset_size = int(0.8 * true_dist_size)
 alpha = 1
 dataset = FactDatasetGenerator(number_person=100, distribution="zipf", dataset_folder='../src/data/',
                                food_list_name="food_list_small.txt", true_dist_size=true_dist_size,
-                               experiment_path="../src/experiment/small_dataset/data/")
+                               experiment_path="src/experiment/small_dataset/data/")
 true_dist, training_data = load_or_generate_dataset(dataset)
 
 # Create datasets
@@ -77,7 +79,7 @@ model = create_model(device, dataset)
 # Trainer configuration
 train_config = Trainer.get_default_config()
 train_config.learning_rate = 5e-5
-train_config.max_iters = 20000
+train_config.max_iters = 2000
 train_config.num_workers = 0
 
 # Create trainer object
