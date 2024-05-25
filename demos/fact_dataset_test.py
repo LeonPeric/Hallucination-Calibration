@@ -53,12 +53,14 @@ def create_trainer(train_config, model, train_data):
 
 def train_model(seed, model, train_data, trainer, epochs=1):
   with open("training_logs.txt", "w") as log_file:
+    log_message = f"Seed, Epoch, Loss\n"
+    log_file.write(log_message)
     for epoch in range(epochs):
         print(f"Epoch {epoch + 1}/{epochs}")
         trainer.run()
         current_loss = trainer.loss.item()
         print(f"Training completed for epoch {epoch + 1}")
-        log_message = f"Seed: {seed}, Epoch {epoch + 1}, Loss: {current_loss:.5f}\n"
+        log_message = f"{seed}, {epoch + 1}, {current_loss:.5f}\n"
         log_file.write(log_message)
 
     torch.save(model.state_dict(), dataset.experiment_path[:-5] + f"model_epoch_{epoch + 1}.pt")
