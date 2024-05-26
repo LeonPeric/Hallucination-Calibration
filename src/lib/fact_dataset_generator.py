@@ -11,16 +11,16 @@ import random
 class FactDatasetGenerator:
     def __init__(
         self,
-        dataset_folder="./src/data/",
+        data_folder="./src/data/",
         number_person=10,
         distribution="zipf",
         seed=42,
         food_list_name="food_list_small.txt",
         true_dist_size=100,
-        experiment_path="./experiment/data/",
+
     ):
-        self.dataset_folder = dataset_folder
-        self.experiment_path = experiment_path
+        self.data_folder = data_folder
+
 
         self.food_list_name = food_list_name
         self.true_dist_size = true_dist_size
@@ -36,10 +36,10 @@ class FactDatasetGenerator:
         possible_facts = []
 
         # Read female names
-        with open(self.dataset_folder + "names-f.txt", "r", encoding="utf-8") as f:
+        with open(self.data_folder + "names-f.txt", "r", encoding="utf-8") as f:
             names_f = f.read().splitlines()
         # Read male names
-        with open(self.dataset_folder + "names-m.txt", "r", encoding="utf-8") as f:
+        with open(self.data_folder + "names-m.txt", "r", encoding="utf-8") as f:
             names_m = f.read().splitlines()
 
         # Combine names
@@ -50,7 +50,7 @@ class FactDatasetGenerator:
 
         # Read food names
         with open(
-            self.dataset_folder + self.food_list_name, "r", encoding="utf-8"
+            self.data_folder + self.food_list_name, "r", encoding="utf-8"
         ) as f:
             self.foods = f.read().splitlines()
 
@@ -62,8 +62,6 @@ class FactDatasetGenerator:
         self.rng.shuffle(possible_facts)
 
         self.all_possibilities = possible_facts
-
-        self.save_file("all_facts.txt", self.all_possibilities)
 
         self.tokenize_all_possibilities()
 
@@ -87,6 +85,8 @@ class FactDatasetGenerator:
             alpha=alpha, possibilities=self.all_possibilities, size=self.true_dist_size
         )
         self.tokenized_true_dist = self.tokenize_data(self.true_dist)
+
+
 
         return self.true_dist
 
@@ -115,8 +115,6 @@ class FactDatasetGenerator:
         self.training_data = self.sample_data(n, data)
         self.tokenized_training_data = self.tokenize_data(self.training_data)
 
-        self.save_file("training_data.txt", self.training_data)
-
         return self.training_data
 
     def sample_data(self, n, data):
@@ -144,23 +142,27 @@ class FactDatasetGenerator:
         return tokenized_data
 
     def save_file(self, file_name, data):
-        with open(self.experiment_path + file_name, "w") as f:
+        with open(file_name, "w") as f:
             for line in data:
                 f.write(line + "\n")
 
     def load_file(self, file_name):
-        with open(self.experiment_path + file_name, "r") as f:
+        with open(file_name, "r") as f:
             return f.read().splitlines()
 
-    def load_dataset(self):
-        # first load all the possible facts
-        self.all_possibilities = self.load_file("all_facts.txt")
+    def save_dataset(self, dataset_directory):
+        self.save_file(os.path.join(dataset_directory,"all_facts.txt"), self.all_possibilities)
+        self.save_file(os.path.join(dataset_directory,"true_dist.txt"), self.true_dist)
+        self.save_file(os.path.join(dataset_directory,"training_data.txt"), self.training_data)
 
+    def load_dataset(self, dataset_directory):
+        # first load all the possible facts
+        self.all_possibilities = self.load_file(os.path.join(dataset_directory,"all_facts.txt"))
+        self.true_dist = self.load_file(os.path.join(dataset_directory,"true_dist.txt"))
+        self.training_data = self.load_file(os.path.join(dataset_directory,"train_data.txt"))
         self.tokenize_all_possibilities()
 
-        # generate the true distribution
-        self.generate_true_dist()
-
-        # load the training data
-        self.training_data = self.load_file("training_data.txt")
+        self.tokenized_true_dist = self.tokenize_data(self.true_dist)
         self.tokenized_training_data = self.tokenize_data(self.training_data)
+
+        return self.true_dist, self.training_data
