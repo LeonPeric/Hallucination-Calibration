@@ -220,26 +220,26 @@ def get_and_save_embeddings(model,train_dataset,tokenized_hallucinations,tokeniz
     normal_fact_embeddings = []
     for fact in train_dataset:
         output, loss, hidden_states = model(fact.unsqueeze(0).long().to(device), output_hidden_states=True)
-        fact = fact.cpu().tolist()
+        fact = fact.detach().cpu().tolist()
         if fact in tokenized_monofacts:
-            monofact_embeddings.append((fact, hidden_states[-1].flatten()))
+            monofact_embeddings.append((fact, hidden_states[-1].flatten().detach()))
         else:
-            normal_fact_embeddings.append((fact, hidden_states[-1].flatten()))
-        final_hidden_states.append((fact, hidden_states[-1].flatten()))
+            normal_fact_embeddings.append((fact, hidden_states[-1].flatten().detach()))
+        final_hidden_states.append((fact, hidden_states[-1].flatten().detach()))
 
     hallucination_embeddings = []
     for fact in tokenized_hallucinations:
-        output, loss, hidden_states = model(torch.tensor(fact).unsqueeze(0).long().to(device),
+        _, _, hidden_states = model(torch.tensor(fact).unsqueeze(0).long().to(device),
                                             output_hidden_states=True)
 
-        hallucination_embeddings.append((fact, hidden_states[-1].flatten()))
+        hallucination_embeddings.append((fact, hidden_states[-1].flatten().detach()                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ))
 
     generated_fact_embeddings = []
     for fact in tokenized_generated_facts:
-        output, loss, hidden_states = model(torch.tensor(fact).unsqueeze(0).long().to(device),
+        _, _, hidden_states = model(torch.tensor(fact).unsqueeze(0).long().to(device),
                                             output_hidden_states=True)
 
-        generated_fact_embeddings.append((fact, hidden_states[-1].flatten()))
+        generated_fact_embeddings.append((fact, hidden_states[-1].flatten().detach()))
 
     with open(os.path.join(embeddings_directory,"monofact_embeddings.json"), "w") as f:
         for line in monofact_embeddings:
@@ -302,7 +302,7 @@ for seed in tqdm(seeds):
                                    food_list_name=food_list_name, true_dist_size=true_dist_size,seed=seed)
 
 
-                run_directory = f"./src/experiment/Run_{run}/"
+                run_directory = f"./src/experiment/Runs/Run_{run}/"
                 print(run_directory)
                 if not os.path.exists(run_directory):
                     print(run_directory)
@@ -333,7 +333,7 @@ for seed in tqdm(seeds):
                 # Trainer configuration
                 train_config = Trainer.get_default_config()
                 train_config.learning_rate = 5e-5
-                train_config.max_iters = 20000
+                train_config.max_iters = 10000
                 train_config.num_workers = 0
                 # Create trainer object
                 trainer = create_trainer(train_config, model, train_data)
@@ -365,7 +365,7 @@ for seed in tqdm(seeds):
 
                 for _ in range(n_sequences):
                     x = torch.Tensor([0]).unsqueeze(0).long().to(device)
-                    y_gen = model.generate(x, 2, do_sample=True)
+                    y_gen = model.generate(x.detach(), 2, do_sample=True)
                     name = food_item = dataset.decode([y_gen[0][1]])[0]
                     food_item = dataset.decode([y_gen[0][2]])[0]
                     collected_generations.append(f"{name},{food_item}")
@@ -391,5 +391,8 @@ for seed in tqdm(seeds):
                                         embeddings_directory=embeddings_directory)
 
                 run += 1
+
+
+
 
 
