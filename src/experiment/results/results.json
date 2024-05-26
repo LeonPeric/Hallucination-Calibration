@@ -1,0 +1,2 @@
+{"run": 0, "monofact_rate": 0.995, "miscalibration_rate": 0.4730145530145533, "facts_to_possible_hallucinations_ratio": 0.37452949145966374, "estimated_hallucinations_rate": -0.10003141788950864, "naive_hallucinations_rate": 0.05, "true_hallucinations_rate": 0.05}
+{"run": 0, "monofact_rate": 0.995, "miscalibration_rate": 0.4460000000000003, "facts_to_possible_hallucinations_ratio": 0.37452949145966374, "estimated_hallucinations_rate": -0.07301686487495562, "naive_hallucinations_rate": 0.019, "true_hallucinations_rate": 0.019}

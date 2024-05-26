@@ -162,3 +162,4 @@ cython_debug/
 src/experiment/medium_dataset/model.pt
 src/experiment/small_dataset/model.pt
 /.idea
+/src/experiment/models
