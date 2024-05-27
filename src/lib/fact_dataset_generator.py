@@ -159,7 +159,7 @@ class FactDatasetGenerator:
         # first load all the possible facts
         self.all_possibilities = self.load_file(os.path.join(dataset_directory,"all_facts.txt"))
         self.true_dist = self.load_file(os.path.join(dataset_directory,"true_dist.txt"))
-        self.training_data = self.load_file(os.path.join(dataset_directory,"train_data.txt"))
+        self.training_data = self.load_file(os.path.join(dataset_directory,"training_data.txt"))
         self.tokenize_all_possibilities()
 
         self.tokenized_true_dist = self.tokenize_data(self.true_dist)
