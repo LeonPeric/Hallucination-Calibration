@@ -214,7 +214,7 @@ As for the used hardware, we trained our model on a single commercial GPU (RTX 4
 
 ### Results
 
-We ran all our experiments over 3 seeds and reported mean and standard deviations. Zipf_alpha parameter is used to change how skewed the true distribution is which gives us control over the monofact rate. A low alpha value results in a less skewed distribution with more monofacts, while a high alpha value would create a distribution with a few very frequent facts and almost no monofacts. We also experimented with two different true distribution sizes, which can be seen from the training size parameter. (Training set 0.8 of true distribution in all experiments)   
+We ran all our experiments over 3 seeds and reported mean and standard deviations. Zipf_alpha parameter is used to change how skewed the true distribution is which gives us control over the monofact rate. A low alpha value results in a less skewed distribution with more monofacts, while a high alpha value would create a distribution with a few very frequent facts and almost no monofacts. We also experimented with two different true distribution sizes, which can be seen from the training size parameter. (Training set 0.8 of true distribution in all experiments) We also tested the effect of increasing the size of all possible factoids (the black square in the figure in Hallucinations section). This did not effect much therefore we did not include it in the table for readability but it is included in the plots.
 
 The table with results shows that, while the lower bound on hallucination rate holds, it’s negative, making it not practical in our case and highlighting an important limitation of using it in real-world scenarios.
 
