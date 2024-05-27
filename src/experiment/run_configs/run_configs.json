@@ -1,17 +1,4 @@
 {"run_number": 0, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_small.txt", "number_of_person": 100, "possibilities_size": 101000}
-{"run_number": 0, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_small.txt", "number_of_person": 100, "possibilities_size": 101000}
-{"run_number": 0, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_small.txt", "number_of_person": 100, "possibilities_size": 101000}
-{"run_number": 0, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_small.txt", "number_of_person": 100, "possibilities_size": 101000}
-{"run_number": 1, "seed": 42, "zipf_alpha": 0.1, "training_size": 8000, "true_dist_size": 10000, "food_list_name": "food_list_small.txt", "number_of_person": 1000, "possibilities_size": 101000}
-{"run_number": 0, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_small.txt", "number_of_person": 100, "possibilities_size": 101000}
-{"run_number": 0, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_small.txt", "number_of_person": 100, "possibilities_size": 101000}
-{"run_number": 0, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_small.txt", "number_of_person": 100, "possibilities_size": 101000}
-{"run_number": 0, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_small.txt", "number_of_person": 100, "possibilities_size": 101000}
-{"run_number": 0, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_small.txt", "number_of_person": 100, "possibilities_size": 101000}
-{"run_number": 1, "seed": 42, "zipf_alpha": 0.1, "training_size": 8000, "true_dist_size": 10000, "food_list_name": "food_list_small.txt", "number_of_person": 1000, "possibilities_size": 101000}
-{"run_number": 2, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_medium.txt", "number_of_person": 100, "possibilities_size": 311000}
-{"run_number": 0, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_small.txt", "number_of_person": 100, "possibilities_size": 101000}
-{"run_number": 0, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_small.txt", "number_of_person": 100, "possibilities_size": 101000}
 {"run_number": 1, "seed": 42, "zipf_alpha": 0.1, "training_size": 8000, "true_dist_size": 10000, "food_list_name": "food_list_small.txt", "number_of_person": 1000, "possibilities_size": 101000}
 {"run_number": 2, "seed": 42, "zipf_alpha": 0.1, "training_size": 800, "true_dist_size": 1000, "food_list_name": "food_list_medium.txt", "number_of_person": 100, "possibilities_size": 311000}
 {"run_number": 3, "seed": 42, "zipf_alpha": 0.1, "training_size": 8000, "true_dist_size": 10000, "food_list_name": "food_list_medium.txt", "number_of_person": 1000, "possibilities_size": 311000}

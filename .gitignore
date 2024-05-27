@@ -163,3 +163,7 @@ src/experiment/medium_dataset/model.pt
 src/experiment/small_dataset/model.pt
 /.idea
 /src/experiment/models
+/src/experiment/runs/Run_55/embeddings
+/src/experiment/runs/Run_56/embeddings
+/src/experiment/runs/Run_54/embeddings
+/src/experiment/runs/embeddings
