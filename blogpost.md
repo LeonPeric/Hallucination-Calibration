@@ -44,9 +44,9 @@ Calibration in machine learning refers to the alignment between predicted probab
 
 Consider the example sentence “Jakub’s favorite fruit is … ”. Suppose we know from data that 60% of people’s favorite fruit is apple. For a model to be well-calibrated, it should predict “apple” with 60% confidence. This means that, when the model predicts "apple" with 60% confidence, it should be correct about 60% of the time. If we look at many instances where the model predicts "apple" with 60% confidence, we should find that in 60% of those cases, "apple" is indeed the correct answer.
 
-![mis_calibration.png](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/mis_calibration.png)
+![mis_calibration.png](assets/mis_calibration.png)
 
-![perfect_calibration.png](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/perfect_calibration.png)
+![perfect_calibration.png](assets/perfect_calibration.png)
 
 ### **Importance of Calibration**
 
@@ -82,7 +82,7 @@ In this blog post, we focus on a different cause of hallucinations, as proposed 
 
 However, first, we need to introduce the **hallucination rate**, which is the ratio of hallucinations to the total model output [15]. Using Kalai and Vempala’s definition as a foundation, we created the following figure to illustrate the hallucination rate visually.
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled.png)
+![Untitled](assets/Untitled.png)
 
 In the figure:
 
@@ -114,7 +114,7 @@ However, let’s assume that in reality, Jakub had almost one thousand different
 
 It’s still easy to have a model that does not hallucinate: it can always output popular facts like “Jakub had pasta”. Forcing the model to output only the 100% true popular responses can be done as a post-pretraining process of aligning the model. This aligning mitigates the hallucination rate [6] but reduces the calibration [1]. 
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled%201.png)
+![Untitled](assets/Untitled(1).png)
 
 *Fig 1. Example of outputs of hypothetical models (calibrated and not calibrated) after being asked: “Patient has cough and fever. What illness might it be?”*
 
@@ -175,7 +175,7 @@ First, we will introduce a synthetic dataset. Kalai et al. introduce the concept
 
 In figure 2 frequencies of top10 facts can be seen for true distribution and training set. Note: This is just an example and this distribution might vary a lot between experiments.
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled%202.png)
+![Untitled](assets/Untitled(2).png)
 
 *Fig. 2: Most common facts in our 2W dataset with true probability, and probability in sampled training data.*
 
@@ -208,7 +208,7 @@ To train our model we used AdamW optimizer with $\beta_1 = 0.9, \beta_2 = 0.95$,
 
 As for the used hardware, we trained our model on a single commercial GPU (RTX 4070 super and RTX 3080). The whole training process for one experiment takes about 5-6 minutes.
 
-![loss_plot.png](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/loss_plot.png)
+![loss_plot.png](assets/loss_plot.png)
 
 *Fig. 3: Training loss after every iteration in one of our experiments.*
 
@@ -235,15 +235,15 @@ The table with results shows that, while the lower bound on hallucination rate h
  |
 | 10 | 8000 | 2.0 | 0.000±0.000 | 0.007±0.001 | 0.836±0.062 | -0.908±0.063 |
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled%203.png)
+![Untitled](assets/Untitled(3).png)
 
 *Fig. 4: Monofact vs miscalibration rate.*
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled%204.png)
+![Untitled](assets/Untitled(4).png)
 
 *Fig. 5: Monofact vs hallucination rate.*
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled%205.png)
+![Untitled](assets/Untitled(5).png)
 
 *Fig. 6: Miscalibration vs hallucination rate.*
 
@@ -271,7 +271,7 @@ That makes intuitive sense: we can imagine that the presence of monofacts “wid
 
 This intuition also yields the next research question: **Do generated hallucinations come from the same area of the latent space as the monofacts?** Or, in other words, **Are generated hallucinations close to the monofacts in the latent space?**
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled%206.png)
+![Untitled](assets/Untitled(6).png)
 
 *Fig. 7: How latent space may look like if our hypothesis is true.*
 
@@ -287,7 +287,7 @@ After that, we can calculate the percentage of hallucinations that have the mono
 
 Secondly, we can perform clustering on training embeddings. Then, we can assess the monofact rate and hallucination rate in every cluster. If our hypothesis is true, we expect to see that clusters with a high monofact rate also have a higher hallucination rate. Figure 5 illustrates this part of our experiment.
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled%207.png)
+![Untitled](assets/Untitled(7).png)
 
 *Fig. 8: The 2 first steps of our proposed experiment.*
 
@@ -314,7 +314,7 @@ We used an Euclidean distance as the distance metric between the embeddings. We 
 
 *Figure 6: Closest training sample to generate hallucinations and generate true facts.*
 
-![figure.png](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/figure.png)
+![figure.png](assets/figure.png)
 
 *Fig 9: TSNE plot showing 2 dimensional manifold of training data embeddings (blue and purple) and generated hallucinations*
 
@@ -322,7 +322,7 @@ We used an Euclidean distance as the distance metric between the embeddings. We 
 
 Table 11 shows our results after performing clustering with 4 clusters. Despite the lack of a perfect correlation between the hallucination rate and the monofact rate among clusters, **we see that in clusters with a higher monofact rate than the global mean, the hallucination rate is also higher.**
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled%208.png)
+![Untitled](assets/Untitled(8).png)
 
 *Fig 10: TSNE plot showing 2 dimensional manifold of training data embeddings after KMeans clustering with 4 clusters*
 
@@ -337,7 +337,7 @@ Table 11 shows our results after performing clustering with 4 clusters. Despite 
 
 We performed similar analyses for the 4, 5, 6, and 7 clusters. Results can be found in Figure 10. We observe that out of 11 cases when the monofact rate was larger than average, in 9 the hallucination rate was also higher than average. This result shows that in our setup, **the hallucination rate is generally higher in the clusters with high monofact rates, as we hypothesized before.**
 
-![Untitled](Final%20Report%20a1018dba0df549e8bbc4422e1054cfe4/Untitled%209.png)
+![Untitled](assets/Untitled(9).png)
 
 *Fig 12: Table showing hallucination rate and monofact rate in every cluster for every tested clustering. The yellow color indicates that the value is larger than the global rate.*
 
