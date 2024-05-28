@@ -341,8 +341,16 @@ While we do not describe it in detail in this blog post, we repeated all of our 
 
 These results look promising in terms of detecting and preventing hallucinations. They show that hallucinations are not evenly located in the embedding space but rather come from high monofact areas. While our hypothesis holds for our experimental setup, **we acknowledge a need for more experiments with real-world datasets and larger models to draw final conclusions.** We believe that these results will encourage further work and tests of our idea. 
 
-## Final remarks
+## Limitations
+---
 
+While our experimental approach has provided valuable insights into the trade-off between hallucination and calibration in generative models, it’s important to acknowledge its limitations as follows:
+
+1. **Duplicate Facts:** In our synthetic dataset, we have duplicate facts, meaning the same fact is represented by the exact same sentence. However, in real-world data, the same fact could be represented by different sentences or phrasings, hence potentially affecting the generalizability of the results.
+2. **Access to Monofacts:** In our synthetic dataset, we have direct access to the monofacts. However, in the real-world setting, identifying monofacts can be challenging due to the same facts being represented in a lot of different ways.
+3. **Variability in Real-World Data:** Real-world data is often more complex and varied than synthetic data. It includes idioms, slangs, and cultural references that our synthetic dataset does not capture. This could potentially limit the applicability of our model to the real-world tasks.
+
+## Final remarks
 ---
 
 The Calibration - Hallucination tradeoff presented in the “Calibrated Models Must Hallucinate” gives an interesting view into how data distribution properties affect the hallucination rate. In this blog post, we presented the background knowledge and intuition required to understand the original work’s claims. We quantitatively verified the proposed lower bound on the hallucination rate by preparing our synthetic dataset and training our GPT-like. Our work showed that in some settings, the calculated lower bounds are much lower than the observed hallucination rate (even negative), making them less useful.
