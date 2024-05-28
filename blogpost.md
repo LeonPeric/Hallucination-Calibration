@@ -225,7 +225,7 @@ The table with results shows that, while the lower bound on hallucination rate h
 | 3 | 800 | 1.0 | 0.013±0.006 | 0.535±0.007 | 0.276±0.005 | -0.221±0.007 |
 | 4 | 800 | 1.5 | 0.001±0.000 | 0.097±0.011 | 0.288±0.013 | -0.099±0.016 |
 | 5 | 800 | 2.0 | 0.000±0.000 | 0.019±0.001 | 0.730±0.037 | -0.082±0.008 |
-| 6 | 8000 | 0.1 | 0.169± 0.017 | 0.921±0.002 | 0.914±0.002 | -0.108±0.005 |
+| 6 | 8000 | 0.1 | 0.169±0.017 | 0.921±0.002 | 0.914±0.002 | -0.108±0.005 |
 | 7 | 8000 | 0.5 | 0.173±0.009 | 0.853±0.005 | 0.902±0.001 | -0.161±0.003 |
 | 8 | 8000 | 1.0 | 0.075±0.006 | 0.368±0.005 | 0.525±0.014 | -0.252±0.016 |
 | 9 | 8000 | 1.5 | 0.007±0.003 | 0.043±0.000 | 0.376±0.022 | -0.413±0.023 |
@@ -402,6 +402,165 @@ Vector Space
 
 # Appendix
 
-Here, we describe more about creating a classifier that classifies if given output is a hallucination based on the proximity to training monofacts.
+## Classifier based on embeddings
+We calculated the L1 distance between all generated output embeddings and training set emebeddings, to confirm our hypothesis that hallucinations are close to monofacts in the embeddings space.
+Using these distance we classified a generated output as a hallucination if the closest embedding belonged to a monofact from the trainin set.
+This table contains accuracy, precision, recall and f1 score metrics of this classification method. The embeddings are from the experiments in the Results section. 
 
-This part is in progress and will be updated.a
+| Experiment No: | Training Data Size | Zipf alpha | Hallucination Rate | Monofact Rate | Accuracy | Precision   | Recall       | F1 score    | 
+| --- | --- | --- | --- | --- |---------|-------------|--------------|-------------|
+| 1 | 800 | 0.1 | 0.032±0.011 | 0.995±0.003 | 0.0323±0.012 | 1.000±0.000 | 0.032±0.012  | 0.063±0.022 |
+| 2 | 800 | 0.5 | 0.028±0.002 | 0.978±0.003 | 0.028±0.003 | 1.000±0.000 | 0.028±0.003  | 0.055±0.005 |
+| 3 | 800 | 1.0 | 0.013±0.006 | 0.535±0.007 | 0.362±0.009 | 0.764±0.016 | 0.362±0.009  | 0.208±0.011 |
+| 4 | 800 | 1.5 | 0.001±0.000 | 0.097±0.011 | 0.850±0.022 | 0.873±0.015 | 0.850±0.022  | 0.783±0.031 |
+| 5 | 800 | 2.0 | 0.000±0.000 | 0.019±0.001 | 0.964±0.007 | 0.929±0.014 | 0.964±0.007  | 0.946±0.011 |
+| 6 | 8000 | 0.1 | 0.169±0.017 | 0.921±0.002 | 0.170±0.018 | 1.000±0.000 | 0.170±0.018  | 0.290±0.025 |
+| 7 | 8000 | 0.5 | 0.173±0.009 | 0.853±0.005 | 0.189±0.007 | 0.980±0.010 | 0.189±0.007  | 0.294±0.015 |
+| 8 | 8000 | 1.0 | 0.075±0.006 | 0.368±0.005 | 0.616±0.027 | 0.748±0.015 | 0.616±0.027  | 0.528±0.033 |
+| 9 | 8000 | 1.5 | 0.007±0.003 | 0.043±0.000 | 0.948±0.003 | 0.947±0.007 | 0.948±0.003  | 0.928±0.006 |
+| 10 | 8000 | 2.0 | 0.000±0.000 | 0.007±0.001 | 0.992±0.003  | 0.987±0.008 | 0.992±0.003  | 0.989±0.005 |
+
+
+![Untitled](assets/monofact_vs_accuracy.png)
+
+![Untitled](assets/monofact_vs_precision.png)
+
+![Untitled](assets/hallucination_vs_f1.png)
+
+
+In real world data, we do not have access to monofacts to compare embeddings with. 
+As a solution we experimented with clustering which requires no knowledge about the type of embedding.
+We applied Kmeans clustering to the training data embeddings. Then we predicted which cluster a generated output embedding will be in.
+We compared the monofact and hallucination rate within clusters. Our hypothesis was, clusters that have higher than global monofact rate will also have higher than global hallucination rates.
+Once again we used the embeddings from our initial experiments. We measured the ratio of clusters that follow our hypothesis for each experiment.
+We also tried different number of clusters.
+
+| Experiment No: | Training Data Size | Zipf alpha | Hallucination Rate | Monofact Rate | 3 Clusters  | 4 Clusters  | 5 Clusters  | 6 Clusters  | 7 Clusters | 
+| --- | --- | --- | --- | --- |-------------|-------------|-------------|-------------|-------|
+| 1 | 800 | 0.1 | 0.032±0.011 | 0.995±0.003 | 0.556±0.192 | 0.500±0.000 | 0.467±0.115 | 0.389±0.096 | 0.429±0.000 |
+| 2 | 800 | 0.5 | 0.028±0.002 | 0.978±0.003 | 0.444±0.192 | 0.417±0.144 | 0.333±0.115 | 0.389±0.096 | 0.429±0.143 |
+| 3 | 800 | 1.0 | 0.013±0.006 | 0.535±0.007 | 0.778±0.192 | 0.500±0.250 | 0.400±0.000 | 0.667±0.167 | 0.476±0.082 |
+| 4 | 800 | 1.5 | 0.001±0.000 | 0.097±0.011 | 0.778±0.192 | 0.750±0.250 | 0.733±0.115 | 0.722±0.096 | 0.619±0.082 |
+| 5 | 800 | 2.0 | 0.000±0.000 | 0.019±0.001 | 0.556±0.192 | 0.583±0.144 | 0.600±0.000 | 0.667±0.167 | 0.619±0.082 |
+| 6 | 8000 | 0.1 | 0.169±0.017 | 0.921±0.002 | 0.111±0.192 | 0.167±0.289 | 0.200±0.346 | 0.222±0.255 | 0.190±0.218 |
+| 7 | 8000 | 0.5 | 0.173±0.009 | 0.853±0.005 | 0.222±0.192 | 0.167±0.144 | 0.200±0.200 | 0.333±0.167 | 0.381±0.165 |
+| 8 | 8000 | 1.0 | 0.075±0.006 | 0.368±0.005 | 0.778±0.192 | 0.750±0.250 | 0.800±0.200 | 0.889±0.096 | 0.857±0.143 |
+| 9 | 8000 | 1.5 | 0.007±0.003 | 0.043±0.000 | 0.889±0.192 | 0.917±0.144 | 0.867±0.115 | 0.778±0.096 |  0.762±0.082 |
+| 10 | 8000 | 2.0 | 0.000±0.000 | 0.007±0.001 | 0.667±0.000 | 0.750±0.000 | 0.773±0.115 | 0.778±0.096 | 0.762±0.082 |
+
+
+Our hypothesis holds best around zipf alpha 1 but breaks down in more extreme alphas especially lower ones. 
+We believe these results are still promising since alpha 1 is the default parameter of zipf distribution which most natural language distributions follow.
+Other clustering methods may yield better results as well. These results provide a sufficient starting point to conduct further research on the topic.
+Specifically density based clustering methods might be used to find dense regions in the embedding space and classify the embeddings in low density regions as monofacts and hallucinations.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
