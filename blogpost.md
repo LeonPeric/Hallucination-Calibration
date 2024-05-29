@@ -455,7 +455,7 @@ Other clustering methods may yield better results as well. These results provide
 Specifically density based clustering methods might be used to find dense regions in the embedding space and classify the embeddings in low density regions as monofacts and hallucinations.
 
 
-
+![Untitled](assets/hypothesis_clusters_vs_monofact_rate.png)
 
 
 
