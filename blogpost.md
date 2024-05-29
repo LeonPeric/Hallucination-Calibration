@@ -74,7 +74,7 @@ Although the exact reasons for hallucination in generative models are still bein
 - **Falsehoods in Training Data**: If the training data contains misinformation, such as fake news or incorrect facts, the model may generate outputs based on these inaccuracies [16]. For instance, if the model's training data includes the false statement "The Netherlands' largest city is The Hague," it may reproduce this error.
 - **Outdated Facts in Training Data**: The model's training data may contain information that was once accurate but is no longer relevant [16]. For example, if the training data includes the sentence "John is going to the pub next Sunday," this statement becomes a hallucination when generated at a later time since the event has already occurred.
 - **Lack of Factual Tokens**: Sometimes, there is no correct factual token for the model to generate [16]. For example, if a model is asked, "What’s my favorite dish?" and it responds, "Your favorite dish is," any subsequent token is likely to be a hallucination because the model does not know the user's actual favorite dish. Similarly, if conditioned with "The tallest volcano in the Netherlands is named," the model cannot provide a correct next token since there is no volcano in the Netherlands, leading to inevitable hallucination.
-- **Ambiguous or Open-Ended Prompts**: When given prompts that are vague or open-ended, the model may fill in the gaps with plausible-sounding but incorrect information [16]. For instance, if asked, "Describe the history of the Zongolian Empire(a non existent empire)," the model might fabricate a detailed history for a non-existent entity because it lacks sufficient context to provide accurate information.
+- **Ambiguous or Open-Ended Prompts**: When given prompts that are vague or open-ended, the model may fill in the gaps with plausible-sounding but incorrect information [16]. For instance, if asked, "Describe the history of the Nongolian Empire(a non existent empire)," the model might fabricate a detailed history for a non-existent entity because it lacks sufficient context to provide accurate information.
 
 Understanding these potential causes is crucial for developing strategies to mitigate hallucination in generative models and improve their reliability and accuracy.
 
@@ -94,7 +94,7 @@ In the figure:
 - Outside this plane are incorrect outputs, defined as gibberish, which are both wrong and not plausible.
 - The orange ring represents the model’s output, which includes facts, hallucinations, and implausible instances.
 
-We define the hallucination rate as the number of hallucinations (red dots) divided by the total output of the model (orange ring).
+We define the hallucination rate as the number of hallucinations in the output (red dots inside orange ring) divided by the total output of the model (orange ring).
 
 Kalai and Vempala [15] highlight that hallucination is often an unavoidable consequence of achieving high calibration in language models. A well-calibrated model aims to produce predictions where the confidence levels match the actual likelihood of correctness. However, this calibration can lead to outputs that, while structurally and grammatically sound, contain incorrect or fabricated information. 
 
